@@ -212,8 +212,8 @@ resource "github_repository_environment" "application" {
   environment = each.value.environment.name
 
   reviewers {
-    users = [ for reviewer_user in each.value.environment.reviewers_users : data.github_user.current[reviewer_user] ]
-    teams = [ for reviewer_team in each.value.environment.reviewers_teams : data.github_team.current[reviewer_team] ]
+    users = [ for reviewer_user in each.value.environment.reviewers_users : data.github_user.current[reviewer_user].id ]
+    teams = [ for reviewer_team in each.value.environment.reviewers_teams : data.github_team.current[reviewer_team].id ]
   }
 }
 
