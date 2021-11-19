@@ -86,8 +86,8 @@ locals {
 
   flattened_workspaces = flatten([ for workspace in var.workspaces : [
       for environment in workspace.environments : {
-          name = "${local.prefix}-${workspace.name}-${environment.name}"
-          workspace_name = "${local.prefix}-${workspace.name}"
+          name = "${var.prefix}-${workspace.name}-${environment.name}"
+          workspace_name = "${var.prefix}-${workspace.name}"
           environment = environment
           create_github_repo = workspace.create_github_repo
         }
