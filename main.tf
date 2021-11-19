@@ -85,7 +85,7 @@ locals {
   github_repositories = [ for workspace in var.workspaces : workspace if workspace.create_github_repo ]
 
   flattened_workspaces = flatten([ for workspace in var.workspaces : [
-      for environment in workspaces.environments : {
+      for environment in workspace.environments : {
           name = "${local.prefix}-${workspace.name}-${environment.name}"
           workspace_name = "${local.prefix}-${workspace.name}"
           environment = environment
@@ -95,8 +95,8 @@ locals {
   ])
 
   github_environments = [ for workspace in local.flattened_workspaces : workspace if workspace.create_github_repo ]
-  github_users = flatten([ for reviewer_user in github_environments.reviewers_users : reviewer_user ])
-  github_teams = flatten([ for reviewer_team in github_environments.reviewers_teams : reviewer_team ])
+  github_users = flatten([ for reviewer_user in local.github_environments.reviewers_users : reviewer_user ])
+  github_teams = flatten([ for reviewer_team in local.github_environments.reviewers_teams : reviewer_team ])
   azure_resource_groups = [ for workspace in local.flattened_workspaces : workspace if workspace.environment.create_azure_resource_group ]
 }
 
@@ -199,7 +199,7 @@ data "github_team" "current" {
 }
 
 resource "github_repository" "application" {
-  for_each = { for repo in local.github_repositories : "${var.prefix}-${repo.name}" => workspace }
+  for_each = { for repo in local.github_repositories : "${var.prefix}-${repo.name}" => repo }
   name        = each.key
   description = "Demonstration ${each.key}"
 
