@@ -95,8 +95,8 @@ locals {
   ])
 
   github_environments = [ for workspace in local.flattened_workspaces : workspace if workspace.create_github_repo ]
-  github_users = flatten([ for reviewer_user in local.github_environments.reviewers_users : reviewer_user ])
-  github_teams = flatten([ for reviewer_team in local.github_environments.reviewers_teams : reviewer_team ])
+  github_users = flatten([ for reviewer_user in local.github_environments.environment.reviewers_users : reviewer_user ])
+  github_teams = flatten([ for reviewer_team in local.github_environments.environment.reviewers_teams : reviewer_team ])
   azure_resource_groups = [ for workspace in local.flattened_workspaces : workspace if workspace.environment.create_azure_resource_group ]
 }
 
