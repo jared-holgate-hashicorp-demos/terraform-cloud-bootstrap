@@ -1,35 +1,35 @@
 variable "workspaces" {
   type = list(object({
-      name = string
-      environments : list(object({
-        name : string
-        reviewers_users : list(string)
-        reviewers_teams : list(string)
-        create_azure_resource_group : bool
-      }))
-      
-      create_github_repo : bool
+    name = string
+    environments : list(object({
+      name : string
+      reviewers_users : list(string)
+      reviewers_teams : list(string)
+      create_azure_resource_group : bool
+    }))
+
+    create_github_repo : bool
   }))
   default = [
     {
-      name = "demo_one"
+      name = "demo-one"
       environments = [
         {
-          name = "dev"
-          reviewers_users = []
-          reviewers_teams = []
+          name                        = "dev"
+          reviewers_users             = []
+          reviewers_teams             = []
           create_azure_resource_group = true
         },
         {
-          name = "test"
-          reviewers_users = ["jaredfholgate"]
-          reviewers_teams = []
+          name                        = "test"
+          reviewers_users             = ["jaredfholgate"]
+          reviewers_teams             = []
           create_azure_resource_group = true
         },
         {
-          name = "prod"
-          reviewers_users = []
-          reviewers_teams = ["tester_team"]
+          name                        = "prod"
+          reviewers_users             = []
+          reviewers_teams             = ["tester_team"]
           create_azure_resource_group = true
         }
       ]
@@ -39,8 +39,8 @@ variable "workspaces" {
 }
 
 variable "prefix" {
-    type = string
-    default = "jared-holgate"
+  type    = string
+  default = "jared-holgate"
 }
 
 terraform {
@@ -82,22 +82,22 @@ provider "azuread" {
 locals {
   organization = "jaredfholgate-hashicorp"
 
-  github_repositories = [ for workspace in var.workspaces : workspace if workspace.create_github_repo ]
+  github_repositories = [for workspace in var.workspaces : workspace if workspace.create_github_repo]
 
-  flattened_workspaces = flatten([ for workspace in var.workspaces : [
-      for environment in workspace.environments : {
-          name = "${var.prefix}-${workspace.name}-${environment.name}"
-          workspace_name = "${var.prefix}-${workspace.name}"
-          environment = environment
-          create_github_repo = workspace.create_github_repo
-        }
-     ]
+  flattened_workspaces = flatten([for workspace in var.workspaces : [
+    for environment in workspace.environments : {
+      name               = "${var.prefix}-${workspace.name}-${environment.name}"
+      workspace_name     = "${var.prefix}-${workspace.name}"
+      environment        = environment
+      create_github_repo = workspace.create_github_repo
+    }
+    ]
   ])
 
-  github_environments = [ for workspace in local.flattened_workspaces : workspace if workspace.create_github_repo ]
-  github_users = flatten([ for env in local.github_environments : env.environment.reviewers_users ])
-  github_teams = flatten([ for env in local.github_environments : env.environment.reviewers_teams ])
-  azure_resource_groups = [ for workspace in local.flattened_workspaces : workspace if workspace.environment.create_azure_resource_group ]
+  github_environments   = [for workspace in local.flattened_workspaces : workspace if workspace.create_github_repo]
+  github_users          = flatten([for env in local.github_environments : env.environment.reviewers_users])
+  github_teams          = flatten([for env in local.github_environments : env.environment.reviewers_teams])
+  azure_resource_groups = [for workspace in local.flattened_workspaces : workspace if workspace.environment.create_azure_resource_group]
 }
 
 data "azurerm_client_config" "current" {
@@ -189,17 +189,17 @@ resource "tfe_variable" "skip_provider_registration" {
 }
 
 data "github_user" "current" {
-    for_each = { for reviewer_user in local.github_users : reviewer_user => reviewer_user}
-    username = each.key
+  for_each = { for reviewer_user in local.github_users : reviewer_user => reviewer_user }
+  username = each.key
 }
 
 data "github_team" "current" {
-    for_each = { for reviewer_team in local.github_teams : reviewer_team => reviewer_team}
-    slug = each.key
+  for_each = { for reviewer_team in local.github_teams : reviewer_team => reviewer_team }
+  slug     = each.key
 }
 
 resource "github_repository" "application" {
-  for_each = { for repo in local.github_repositories : "${var.prefix}-${repo.name}" => repo }
+  for_each    = { for repo in local.github_repositories : "${var.prefix}-${repo.name}" => repo }
   name        = each.key
   description = "Demonstration ${each.key}"
 
@@ -212,14 +212,14 @@ resource "github_repository_environment" "application" {
   environment = each.value.environment.name
 
   reviewers {
-    users = [ for reviewer_user in each.value.environment.reviewers_users : data.github_user.current[reviewer_user].id ]
-    teams = [ for reviewer_team in each.value.environment.reviewers_teams : data.github_team.current[reviewer_team].id ]
+    users = [for reviewer_user in each.value.environment.reviewers_users : data.github_user.current[reviewer_user].id]
+    teams = [for reviewer_team in each.value.environment.reviewers_teams : data.github_team.current[reviewer_team].id]
   }
 }
 
 resource "github_actions_environment_secret" "terraform_api_token" {
-  for_each    = { for env in local.github_environments : env.name => env }
-  repository  = each.key
+  for_each        = { for env in local.github_environments : env.name => env }
+  repository      = each.key
   environment     = github_repository_environment.application[each.key].environment
   secret_name     = "TF_API_TOKEN"
   plaintext_value = tfe_team_token.application[each.key].token
