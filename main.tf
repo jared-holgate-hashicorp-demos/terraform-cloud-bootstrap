@@ -208,7 +208,7 @@ resource "github_repository" "application" {
 
 resource "github_repository_environment" "application" {
   for_each    = { for env in local.github_environments : env.name => env }
-  repository  = each.key
+  repository  = github_repository.application[each.value.workspace_name].name
   environment = each.value.environment.name
 
   reviewers {
@@ -219,7 +219,7 @@ resource "github_repository_environment" "application" {
 
 resource "github_actions_environment_secret" "terraform_api_token" {
   for_each        = { for env in local.github_environments : env.name => env }
-  repository      = each.key
+  repository      = github_repository.application[each.value.workspace_name].name
   environment     = github_repository_environment.application[each.key].environment
   secret_name     = "TF_API_TOKEN"
   plaintext_value = tfe_team_token.application[each.key].token
