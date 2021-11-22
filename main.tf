@@ -96,7 +96,7 @@ locals {
     ]
   ])
 
-  gitub_team_access = flatten([ for repo in local.github_workspaces : [
+  gitub_team_access = flatten([ for repo in local.github_repositories : [
     for team in repo.github_repo_team_access : {
       team_name = team
       repo_name = "${var.prefix}-${repo.name}"
