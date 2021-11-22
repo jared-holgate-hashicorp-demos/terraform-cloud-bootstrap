@@ -9,6 +9,7 @@ variable "workspaces" {
     }))
 
     create_github_repo : bool
+    github_repo_team_access : list(string)
   }))
   default = [
     {
@@ -34,6 +35,7 @@ variable "workspaces" {
         }
       ]
       create_github_repo = true
+      github_repo_team_access = ["tester_team"]
     }
   ]
 }
@@ -94,9 +96,15 @@ locals {
     ]
   ])
 
+  gitub_team_access = flatten([ for repo in local.github_workspaces : [
+    for team in repo.github_repo_team_access : {
+      team_name = team
+      repo_name = "${var.prefix}-${repo.name}"
+    }]
+  ])
   github_environments   = [for workspace in local.flattened_workspaces : workspace if workspace.create_github_repo]
-  github_users          = flatten([for env in local.github_environments : env.environment.reviewers_users])
-  github_teams          = flatten([for env in local.github_environments : env.environment.reviewers_teams])
+  github_users          = distinct(flatten([for env in local.github_environments : env.environment.reviewers_users]))
+  github_teams          = distinct(concat(flatten([for env in local.github_environments : env.environment.reviewers_teams]), flatten([ for repo in local.github_repositories : repo.github_repo_team_access ])))
   azure_resource_groups = [for workspace in local.flattened_workspaces : workspace if workspace.environment.create_azure_resource_group]
 }
 
@@ -204,6 +212,13 @@ resource "github_repository" "application" {
   description = "Demonstration ${each.key}"
 
   visibility = "public"
+}
+
+resource "github_team_repository" "application" {
+  for_each   = { for access in local.gitub_team_access : "${access.repo_name}-${access.team_name}" => access }
+  team_id    = github_team.current[access.value.team_name].id
+  repository = github_repository.application[each.value.repo_name].name
+  permission = "push"
 }
 
 resource "github_repository_environment" "application" {
