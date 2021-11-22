@@ -222,6 +222,9 @@ resource "github_team_repository" "application" {
 }
 
 resource "github_repository_environment" "application" {
+  depends_on = [
+    github_team_repository.application
+  ]
   for_each    = { for env in local.github_environments : env.name => env }
   repository  = github_repository.application[each.value.workspace_name].name
   environment = each.value.environment.name
