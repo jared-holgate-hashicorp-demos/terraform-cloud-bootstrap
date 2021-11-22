@@ -203,7 +203,7 @@ resource "github_repository" "application" {
   name        = each.key
   description = "Demonstration ${each.key}"
 
-  visibility = "private"
+  visibility = "public"
 }
 
 resource "github_repository_environment" "application" {
