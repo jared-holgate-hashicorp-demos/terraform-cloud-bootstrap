@@ -34,7 +34,7 @@ variable "workspaces" {
           create_azure_resource_group = true
         }
       ]
-      create_github_repo = true
+      create_github_repo      = true
       github_repo_team_access = ["tester_team"]
     }
   ]
@@ -96,7 +96,7 @@ locals {
     ]
   ])
 
-  gitub_team_access = flatten([ for repo in local.github_repositories : [
+  gitub_team_access = flatten([for repo in local.github_repositories : [
     for team in repo.github_repo_team_access : {
       team_name = team
       repo_name = "${var.prefix}-${repo.name}"
@@ -104,7 +104,7 @@ locals {
   ])
   github_environments   = [for workspace in local.flattened_workspaces : workspace if workspace.create_github_repo]
   github_users          = distinct(flatten([for env in local.github_environments : env.environment.reviewers_users]))
-  github_teams          = distinct(concat(flatten([for env in local.github_environments : env.environment.reviewers_teams]), flatten([ for repo in local.github_repositories : repo.github_repo_team_access ])))
+  github_teams          = distinct(concat(flatten([for env in local.github_environments : env.environment.reviewers_teams]), flatten([for repo in local.github_repositories : repo.github_repo_team_access])))
   azure_resource_groups = [for workspace in local.flattened_workspaces : workspace if workspace.environment.create_azure_resource_group]
 }
 
