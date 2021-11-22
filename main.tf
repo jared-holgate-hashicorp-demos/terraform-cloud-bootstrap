@@ -216,7 +216,7 @@ resource "github_repository" "application" {
 
 resource "github_team_repository" "application" {
   for_each   = { for access in local.gitub_team_access : "${access.repo_name}-${access.team_name}" => access }
-  team_id    = github_team.current[access.value.team_name].id
+  team_id    = data.github_team.current[access.value.team_name].id
   repository = github_repository.application[each.value.repo_name].name
   permission = "push"
 }
