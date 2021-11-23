@@ -14,7 +14,8 @@ resource "github_repository" "application" {
   description = "Demonstration ${each.key}"
 
   visibility = "public"
-
+  gitignore_template = "Terraform"
+  
   template {
     owner      = "jared-holgate-hashicorp-demos"
     repository = "terraform-ci-cd-template"
