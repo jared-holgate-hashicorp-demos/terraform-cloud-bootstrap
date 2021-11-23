@@ -14,6 +14,11 @@ resource "github_repository" "application" {
   description = "Demonstration ${each.key}"
 
   visibility = "public"
+
+  template {
+    owner      = "jared-holgate-hashicorp-demos"
+    repository = "terraform-ci-cd-template"
+  }
 }
 
 resource "github_team_repository" "application" {
