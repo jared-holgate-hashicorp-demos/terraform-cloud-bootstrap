@@ -12,7 +12,7 @@ resource "azurerm_resource_group" "application" {
 
 resource "azurerm_role_assignment" "application" {
   for_each             = { for rg in local.azure_resource_groups : rg.name => rg }
-  scope                = data.azurerm_subscription.current.id
+  scope                = azurerm_resource_group.application[each.key].id
   role_definition_name = "Owner"
   principal_id         = azuread_service_principal.application[each.key].object_id
 }
