@@ -63,16 +63,6 @@ resource "tfe_variable" "subscription_id" {
   sensitive    = true
 }
 
-resource "tfe_variable" "client_secret_for_unseal" {
-  for_each     = { for rg in local.azure_resource_groups : rg.name => rg }
-  key          = "TF_VAR_client_secret_for_unseal"
-  value        = azuread_service_principal_password.application[each.key].value
-  category     = "env"
-  workspace_id = tfe_workspace.application[each.key].id
-  description  = "The Azure Client Secret required for unsealing Vault"
-  sensitive    = true
-}
-
 resource "tfe_variable" "skip_provider_registration" {
   for_each     = { for rg in local.azure_resource_groups : rg.name => rg }
   key          = "ARM_SKIP_PROVIDER_REGISTRATION"
