@@ -13,7 +13,7 @@ resource "tfe_workspace" "application" {
   description  = "Demonstration ${each.key}"
 
   dynamic "vcs_repo" {
-    for_each = each.value.vcs_integrated ? [ each.key ] : []
+    for_each = each.value.vcs_integrated ? [ "${var.prefix}-${each.key}" ] : []
     content {
       identifier = github_repository.application[vcs_repo.value].full_name
       oauth_token_id = tfe_oauth_client.application.id
