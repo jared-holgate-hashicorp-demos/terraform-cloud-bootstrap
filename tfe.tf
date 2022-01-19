@@ -1,8 +1,24 @@
+resource "tfe_oauth_client" "application" {
+  organization     = local.organization
+  api_url          = "https://api.github.com"
+  http_url         = "https://github.com"
+  oauth_token      = var.github_token
+  service_provider = "github"
+}
+
 resource "tfe_workspace" "application" {
   for_each     = { for workspace in local.flattened_workspaces : workspace.name => workspace }
   name         = each.key
   organization = local.organization
   description  = "Demonstration ${each.key}"
+
+  dynamic "vcs_repo" {
+    for_each = each.value.vcs_integrated ? [ each.key ] : []
+    content {
+      repository = vcs_repo.key
+      oauth_token_id = tfe_oauth_client.application.id
+    }
+  }
 }
 
 resource "tfe_team" "application" {

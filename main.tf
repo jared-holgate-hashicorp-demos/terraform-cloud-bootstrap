@@ -29,6 +29,7 @@ provider "tfe" {
 }
 
 provider "github" {
+  token = var.github_token
 }
 
 provider "azuread" {
@@ -45,6 +46,7 @@ locals {
       workspace_name     = "${var.prefix}-${workspace.name}"
       environment        = environment
       create_github_repo = workspace.create_github_repo
+      vcs_integrated     = workspace.vcs_integrated
     }
     ]
   ])
