@@ -41,7 +41,13 @@ resource "tfe_team_organization_member" "users" {
 
 resource "tfe_team_access" "users" {
   for_each     = { for workspace_permission in local.terraform_workspace_team_permissions : "${workspace_permission.workspace_name}-${workspace_permission.team_name}" => workspace_permission }
-  permissions =  each.value.permissions
+  permissions {
+    runs = each.value.permissions.runs
+    variables = each.value.permissions.variables
+    state_versions = each.value.permissions.state_versions
+    sentinel_mocks = each.value.permissions.sentinel_mocks
+    workspace_locking = each.value.permissions.workspace_locking
+  } 
   team_id      = tfe_team.users[each.value.team_name].id
   workspace_id = tfe_workspace.application[each.value.workspace_name].id
 }
