@@ -33,10 +33,10 @@ data "tfe_organization_membership" "users" {
   email = each.key
 }
 
-resource "tfe_team_organization_member" "test" {
+resource "tfe_team_organization_member" "users" {
   for_each     = { for team_membership in local.terraform_team_members : "${team_membership.team_name}-${team_membership.member}" => team_membership }
   team_id = tfe_team.users[each.value.team_name].id
-  organization_membership_id = tfe_organization_membership.users[each.value.member].id
+  organization_membership_id = data.tfe_organization_membership.users[each.value.member].id
 }
 
 resource "tfe_team" "application" {
