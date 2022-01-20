@@ -1,3 +1,3 @@
 output "config" {
-    value = local.config
+  value = local.config
 }

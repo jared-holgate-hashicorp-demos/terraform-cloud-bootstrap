@@ -13,9 +13,9 @@ resource "github_repository" "application" {
   name        = each.key
   description = "Demonstration ${each.key}"
 
-  visibility = "public"
+  visibility         = "public"
   gitignore_template = "Terraform"
-  
+
   template {
     owner      = each.value.github_repository.template.organisation
     repository = each.value.github_repository.template.repository

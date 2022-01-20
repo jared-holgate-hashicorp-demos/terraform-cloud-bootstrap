@@ -14,12 +14,12 @@ variable "github_organisation" {
 }
 
 variable "github_token" {
-  type    = string
-  default = ""
+  type      = string
+  default   = ""
   sensitive = true
 }
 
 variable "configs" {
   type    = list(string)
-  default = [ "demo-one", "demo-two" ]
+  default = ["demo-one", "demo-two"]
 }

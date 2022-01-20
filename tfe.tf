@@ -13,9 +13,9 @@ resource "tfe_workspace" "application" {
   description  = "Demonstration ${each.key}"
 
   dynamic "vcs_repo" {
-    for_each = each.value.vcs_integrated ? [ each.value.application_name ] : []
+    for_each = each.value.vcs_integrated ? [each.value.application_name] : []
     content {
-      identifier = github_repository.application[vcs_repo.value].full_name
+      identifier     = github_repository.application[vcs_repo.value].full_name
       oauth_token_id = tfe_oauth_client.application.oauth_token_id
     }
   }
@@ -28,26 +28,26 @@ resource "tfe_team" "users" {
 }
 
 data "tfe_organization_membership" "users" {
-  for_each = { for user in distinct(flatten(local.config.teams[*].members)) : user => user}
-  organization  = var.terraform_organisation
-  email = each.key
+  for_each     = { for user in distinct(flatten(local.config.teams[*].members)) : user => user }
+  organization = var.terraform_organisation
+  email        = each.key
 }
 
 resource "tfe_team_organization_member" "users" {
-  for_each     = { for team_membership in local.terraform_team_members : "${team_membership.team_name}-${team_membership.member}" => team_membership }
-  team_id = tfe_team.users[each.value.team_name].id
+  for_each                   = { for team_membership in local.terraform_team_members : "${team_membership.team_name}-${team_membership.member}" => team_membership }
+  team_id                    = tfe_team.users[each.value.team_name].id
   organization_membership_id = data.tfe_organization_membership.users[each.value.member].id
 }
 
 resource "tfe_team_access" "users" {
-  for_each     = { for workspace_permission in local.terraform_workspace_team_permissions : "${workspace_permission.workspace_name}-${workspace_permission.team_name}" => workspace_permission }
+  for_each = { for workspace_permission in local.terraform_workspace_team_permissions : "${workspace_permission.workspace_name}-${workspace_permission.team_name}" => workspace_permission }
   permissions {
-    runs = each.value.permissions.permissions.runs
-    variables = each.value.permissions.permissions.variables
-    state_versions = each.value.permissions.permissions.state_versions
-    sentinel_mocks = each.value.permissions.permissions.sentinel_mocks
+    runs              = each.value.permissions.permissions.runs
+    variables         = each.value.permissions.permissions.variables
+    state_versions    = each.value.permissions.permissions.state_versions
+    sentinel_mocks    = each.value.permissions.permissions.sentinel_mocks
     workspace_locking = each.value.permissions.permissions.workspace_locking
-  } 
+  }
   team_id      = tfe_team.users[each.value.team_name].id
   workspace_id = tfe_workspace.application[each.value.workspace_name].id
 }
