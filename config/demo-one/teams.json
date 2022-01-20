@@ -1,0 +1,14 @@
+[
+    {
+        "name": "demo-one-dev-users",
+        "members": [
+            "jared.holgate+user-demo-one-dev@hashicorp.com"
+        ]
+    },
+    {
+        "name": "demo-one-prod-users",
+        "members": [
+            "jared.holgate+user-demo-one-prod@hashicorp.com"
+        ]
+    }
+]

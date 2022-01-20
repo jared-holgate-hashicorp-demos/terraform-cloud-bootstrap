@@ -1,0 +1,87 @@
+[
+    {
+        "name": "demo-two",
+        "github_repository": {
+            "create": true,
+            "template": {
+                "organisation": "jared-holgate-hashicorp-demos",
+                "repository": "terraform-ci-cd-template"
+            },
+            "team_access": [
+                {
+                    "team_name": "tester_team",
+                    "permission": "push"
+                }
+            ]
+        },
+        "environments": [
+            {
+                "name": "dev",
+                "azure_resource_group": {
+                    "create": true
+                },
+                "vcs_integrated": true,
+                "github_environment": {
+                    "reviewers_users": [],
+                    "reviewers_teams": []
+                },
+                "workspace_permissions": [
+                    {
+                        "team_name": "demo-two-dev-users",
+                        "permission_set": "restricted"
+                    },
+                    {
+                        "team_name": "demo-owner-users",
+                        "permission_set": "full"
+                    }
+                ]
+            },
+            {
+                "name": "test",
+                "azure_resource_group": {
+                    "create": true
+                },
+                "vcs_integrated": true,
+                "github_environment": {
+                    "reviewers_users": [
+                        "jaredfholgate"
+                    ],
+                    "reviewers_teams": []
+                },
+                "workspace_permissions": [
+                    {
+                        "team_name": "demo-two-dev-users",
+                        "permission_set": "restricted"
+                    },
+                    {
+                        "team_name": "demo-owner-users",
+                        "permission_set": "full"
+                    }
+                ]
+            },
+            {
+                "name": "prod",
+                "azure_resource_group": {
+                    "create": true
+                },
+                "vcs_integrated": true,
+                "github_environment": {
+                    "reviewers_users": [],
+                    "reviewers_teams": [
+                        "tester_team"
+                    ]
+                },
+                "workspace_permissions": [
+                    {
+                        "team_name": "demo-two-prod-users",
+                        "permission_set": "restricted"
+                    },
+                    {
+                        "team_name": "demo-owner-users",
+                        "permission_set": "full"
+                    }
+                ]
+            }
+        ]
+    }
+]

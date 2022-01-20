@@ -19,7 +19,7 @@ variable "github_token" {
   sensitive = true
 }
 
-variable "config_file" {
-  type    = string
-  default = "config.json"
+variable "configs" {
+  type    = list(string)
+  default = [ "demo-one", "demo-two" ]
 }
