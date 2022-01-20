@@ -1,13 +1,13 @@
 locals {
 
-    application_config = flatten([ for config in var.configs : jsondecode(file("${path.module}/${config}/applications.json"))])
-    teams_config = flatten(flatten([ for config in var.configs : jsondecode(file("${path.module}/${config}/teams.json"))]), jsondecode(file("${path.module}/teams.json")))
-    permission_sets_config = jsondecode(file("${path.module}/permission-sets.json"))
+    application_config = flatten([ for config in var.configs : jsondecode(file("${path.module}/config/${config}/applications.json"))])
+    teams_config = concat(flatten([ for config in var.configs : jsondecode(file("${path.module}/config/${config}/teams.json"))]), jsondecode(file("${path.module}/teams.json")))
+    permission_sets_config = jsondecode(file("${path.module}/config/permission-sets.json"))
 
     config = {
-        applications = application_config,
-        teams = teams_config,
-        permission_sets = permission_sets_config
+        applications = local.application_config,
+        teams = local.teams_config,
+        permission_sets = local.permission_sets_config
     }
 
     github_repositories = [for application in local.config.applications : application if application.github_repository.create]
