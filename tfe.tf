@@ -22,8 +22,8 @@ resource "tfe_workspace" "application" {
 }
 
 resource "tfe_team" "users" {
-  for_each     = { for team in local.config.teams : team.name => team }
-  name         = "${var.prefix}-${each.key}"
+  for_each     = { for team in local.config.teams : "${var.prefix}-${team.name}" => team }
+  name         = each.key
   organization = var.terraform_organisation
 }
 
