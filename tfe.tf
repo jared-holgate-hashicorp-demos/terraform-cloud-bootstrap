@@ -21,6 +21,24 @@ resource "tfe_workspace" "application" {
   }
 }
 
+resource "tfe_team" "users" {
+  for_each     = { for team in local.config.teams : team.name => team }
+  name         = each.key
+  organization = var.terraform_organisation
+}
+
+data "tfe_organization_membership" "users" {
+  for_each = { for user in distinct(flatten(local.config.teams[*].members)) : user => user}
+  organization  = var.terraform_organisation
+  email = each.key
+}
+
+resource "tfe_team_organization_member" "test" {
+  for_each     = { for team_membership in local.terraform_team_members : "${team_membership.team_name}-${team_membership.member}" => team_membership }
+  team_id = tfe_team.users[each.value.team_name].id
+  organization_membership_id = tfe_organization_membership.users[each.value.member].id
+}
+
 resource "tfe_team" "application" {
   for_each     = { for workspace in local.environments : workspace.name => workspace }
   name         = "${each.key}-apikey"
