@@ -17,8 +17,8 @@ resource "github_repository" "application" {
   gitignore_template = "Terraform"
   
   template {
-    owner      = each.value.github_repo_template_owner
-    repository = each.value.github_repo_template_repository
+    owner      = each.value.github_repository.template.organisation
+    repository = each.value.github_repository.template.repository
   }
 }
 
@@ -26,7 +26,7 @@ resource "github_team_repository" "application" {
   for_each   = { for access in local.gitub_team_access : "${access.repo_name}-${access.team_name}" => access }
   team_id    = data.github_team.current[each.value.team_name].id
   repository = github_repository.application[each.value.repo_name].name
-  permission = "push"
+  permission = each.value.permission
 }
 
 resource "github_repository_environment" "application" {

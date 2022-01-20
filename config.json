@@ -22,7 +22,7 @@
                         "create": true
                     },
                     "vcs_integrated": false,
-                    "github_environemnt": {
+                    "github_environment": {
                         "reviewers_users": [ ],
                         "reviewers_teams": [ ]
                     },
@@ -43,7 +43,7 @@
                         "create": true
                     },
                     "vcs_integrated": true,
-                    "github_environemnt": {
+                    "github_environment": {
                         "reviewers_users": [
                             "jaredfholgate"
                         ],
@@ -66,7 +66,7 @@
                         "create": true
                     },
                     "vcs_integrated": true,
-                    "github_environemnt": {
+                    "github_environment": {
                         "reviewers_users": [ ],
                         "reviewers_teams": [
                             "tester_team"
@@ -107,7 +107,7 @@
                         "create": true
                     },
                     "vcs_integrated": true,
-                    "github_environemnt": {
+                    "github_environment": {
                         "reviewers_users": [ ],
                         "reviewers_teams": [ ]
                     },
@@ -128,7 +128,7 @@
                         "create": true
                     },
                     "vcs_integrated": true,
-                    "github_environemnt": {
+                    "github_environment": {
                         "reviewers_users": [
                             "jaredfholgate"
                         ],
@@ -151,7 +151,7 @@
                         "create": true
                     },
                     "vcs_integrated": true,
-                    "github_environemnt": {
+                    "github_environment": {
                         "reviewers_users": [ ],
                         "reviewers_teams": [
                             "tester_team"

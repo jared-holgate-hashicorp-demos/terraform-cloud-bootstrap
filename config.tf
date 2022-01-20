@@ -15,9 +15,10 @@ locals {
     ])
 
     gitub_team_access = flatten([for repo in local.github_repositories : [
-        for team in repo.github_repo_team_access : {
-        team_name = team
-        repo_name = "${var.prefix}-${repo.name}"
+        for team in repo.github_repository.team_access : {
+            team_name = team.team_name
+            permission = team.permission
+            repo_name = "${var.prefix}-${repo.name}"
         }]
     ])
     github_environments   = [for environment in local.environments : environment if environment.create_github_repo]
