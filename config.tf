@@ -23,5 +23,5 @@ locals {
     github_environments   = [for environment in local.environments : environment if environment.create_github_repo]
     github_users          = distinct(flatten([for environment in local.github_environments : environment.environment.github_environment.reviewers_users]))
     github_teams          = distinct(concat(flatten([for environment in local.github_environments : environment.environment.github_environment.reviewers_teams]), flatten([for repo in local.github_repositories : repo.github_repository.team_access[*].team_name])))
-    azure_resource_groups = [for environment in local.environment : environment if environment.environment.azure_resource_group.create]
+    azure_resource_groups = [for environment in local.environments : environment if environment.environment.azure_resource_group.create]
 }

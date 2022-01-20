@@ -18,7 +18,7 @@ resource "github_repository" "application" {
   
   template {
     owner      = each.value.github_repo_template_owner
-    repository = each.valiue.github_repo_template_repository
+    repository = each.value.github_repo_template_repository
   }
 }
 
