@@ -1,5 +1,5 @@
 resource "tfe_oauth_client" "application" {
-  organization     = local.organization
+  organization     = var.terraform_organisation
   api_url          = "https://api.github.com"
   http_url         = "https://github.com"
   oauth_token      = var.github_token
@@ -7,9 +7,9 @@ resource "tfe_oauth_client" "application" {
 }
 
 resource "tfe_workspace" "application" {
-  for_each     = { for workspace in local.flattened_workspaces : workspace.name => workspace }
+  for_each     = { for workspace in local.environments : workspace.name => workspace }
   name         = each.key
-  organization = local.organization
+  organization = var.terraform_organisation
   description  = "Demonstration ${each.key}"
 
   dynamic "vcs_repo" {
@@ -22,20 +22,20 @@ resource "tfe_workspace" "application" {
 }
 
 resource "tfe_team" "application" {
-  for_each     = { for workspace in local.flattened_workspaces : workspace.name => workspace }
-  name         = each.key
-  organization = local.organization
+  for_each     = { for workspace in local.environments : workspace.name => workspace }
+  name         = "${each.key}-apikey"
+  organization = var.terraform_organisation
 }
 
 resource "tfe_team_access" "application" {
-  for_each     = { for workspace in local.flattened_workspaces : workspace.name => workspace }
+  for_each     = { for workspace in local.environments : workspace.name => workspace }
   access       = "write"
   team_id      = tfe_team.application[each.key].id
   workspace_id = tfe_workspace.application[each.key].id
 }
 
 resource "tfe_team_token" "application" {
-  for_each = { for workspace in local.flattened_workspaces : workspace.name => workspace }
+  for_each = { for workspace in local.environments : workspace.name => workspace }
   team_id  = tfe_team.application[each.key].id
 }
 

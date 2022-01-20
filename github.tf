@@ -17,8 +17,8 @@ resource "github_repository" "application" {
   gitignore_template = "Terraform"
   
   template {
-    owner      = "jared-holgate-hashicorp-demos"
-    repository = "terraform-ci-cd-template"
+    owner      = each.value.github_repo_template_owner
+    repository = each.valiue.github_repo_template_repository
   }
 }
 
