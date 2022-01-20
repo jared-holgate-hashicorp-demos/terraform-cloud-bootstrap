@@ -30,4 +30,11 @@ locals {
         member = member
         }]
     ])
+    terraform_workspace_team_permissions = flatten([for environment in local.environments : [ 
+        for permission in environment.workspace_permissions : {
+            workspace_name = environment.application_name
+            team_name = "${var.prefix}-${permission.team_name}"
+            permissions = element(local.config.permission_sets, index(local.config.permission_sets, permission.permission_set))
+        }]
+    ])
 }

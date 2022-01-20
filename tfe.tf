@@ -39,6 +39,13 @@ resource "tfe_team_organization_member" "users" {
   organization_membership_id = data.tfe_organization_membership.users[each.value.member].id
 }
 
+resource "tfe_team_access" "users" {
+  for_each     = { for workspace_permission in local.terraform_workspace_team_permissions : "${workspace_permission.workspace_name}-${workspace_permission.team_name}" => workspace_permission }
+  permissions =  each.value.permissions
+  team_id      = tfe_team.user[each.value.team_name].id
+  workspace_id = tfe_workspace.application[each.value.workspace_name].id
+}
+
 resource "tfe_team" "application" {
   for_each     = { for workspace in local.environments : workspace.name => workspace }
   name         = "${each.key}-apikey"
