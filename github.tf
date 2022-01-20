@@ -34,18 +34,18 @@ resource "github_repository_environment" "application" {
     github_team_repository.application
   ]
   for_each    = { for env in local.github_environments : env.name => env }
-  repository  = github_repository.application[each.value.workspace_name].name
+  repository  = github_repository.application[each.value.environment_name].name
   environment = each.value.environment.name
 
   reviewers {
-    users = [for reviewer_user in each.value.environment.reviewers_users : data.github_user.current[reviewer_user].id]
-    teams = [for reviewer_team in each.value.environment.reviewers_teams : data.github_team.current[reviewer_team].id]
+    users = [for reviewer_user in each.value.environment.github_environment.reviewers_users : data.github_user.current[reviewer_user].id]
+    teams = [for reviewer_team in each.value.environment.github_environment.reviewers_teams : data.github_team.current[reviewer_team].id]
   }
 }
 
 resource "github_actions_environment_secret" "terraform_api_token" {
   for_each        = { for env in local.github_environments : env.name => env }
-  repository      = github_repository.application[each.value.workspace_name].name
+  repository      = github_repository.application[each.value.environment_name].name
   environment     = github_repository_environment.application[each.key].environment
   secret_name     = "TF_API_TOKEN"
   plaintext_value = tfe_team_token.application[each.key].token
