@@ -29,7 +29,7 @@ provider "tfe" {
 }
 
 provider "github" {
-  token = var.github_token
+  #token = var.github_token
 }
 
 provider "azuread" {
