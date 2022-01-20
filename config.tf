@@ -1,7 +1,7 @@
 locals {
 
     application_config = flatten([ for config in var.configs : jsondecode(file("${path.module}/config/${config}/applications.json"))])
-    teams_config = concat(flatten([ for config in var.configs : jsondecode(file("${path.module}/config/${config}/teams.json"))]), jsondecode(file("${path.module}/teams.json")))
+    teams_config = concat(flatten([ for config in var.configs : jsondecode(file("${path.module}/config/${config}/teams.json"))]), jsondecode(file("${path.module}/config/teams.json")))
     permission_sets_config = jsondecode(file("${path.module}/config/permission-sets.json"))
 
     config = {
