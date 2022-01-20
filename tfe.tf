@@ -7,10 +7,11 @@ resource "tfe_oauth_client" "application" {
 }
 
 resource "tfe_workspace" "application" {
-  for_each     = { for workspace in local.environments : workspace.name => workspace }
-  name         = each.key
-  organization = var.terraform_organisation
-  description  = "Demonstration ${each.key}"
+  for_each       = { for workspace in local.environments : workspace.name => workspace }
+  name           = each.key
+  organization   = var.terraform_organisation
+  description    = "Demonstration ${each.key}"
+  queue_all_runs = false
 
   dynamic "vcs_repo" {
     for_each = each.value.vcs_integrated ? [each.value.application_name] : []
