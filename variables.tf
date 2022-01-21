@@ -19,6 +19,11 @@ variable "github_token" {
   sensitive = true
 }
 
+variable "oauth_tokens" {
+  type = map(string)
+  sensitive = true
+}
+
 variable "configs" {
   type    = list(string)
   default = ["demo-one", "demo-two"]
