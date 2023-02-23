@@ -15,7 +15,7 @@ resource "tfe_workspace" "application" {
     for_each = each.value.vcs_integrated ? [each.value.application_name] : []
     content {
       identifier     = github_repository.application[vcs_repo.value].full_name
-      oauth_token_id = tfe_oauth_client.application[vcs_repo.value].oauth_token_id
+      oauth_token_id = data.tfe_oauth_client.application[vcs_repo.value].oauth_token_id
     }
   }
 }
