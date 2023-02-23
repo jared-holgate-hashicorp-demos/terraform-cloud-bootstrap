@@ -13,12 +13,6 @@ variable "github_organisation" {
   default = "jared-holgate-hashicorp-demos"
 }
 
-variable "github_token" {
-  type      = string
-  default   = ""
-  sensitive = true
-}
-
 variable "oauth_tokens" {
   type = map(string)
   sensitive = true
