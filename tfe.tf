@@ -1,6 +1,5 @@
 data "tfe_oauth_client" "application" {
   for_each = { for repo in local.github_repositories : "${var.prefix}-${repo.name}" => repo }
-  name = each.key
   organization     = var.terraform_organisation
   name             = var.oauth_tokens[each.value.name]
 }
