@@ -2,13 +2,13 @@
     {
         "name": "demo-one-dev-users",
         "members": [
-            "jared.holgate+user-demo-one-dev@hashicorp.com"
+            "jared.holgate.ms+user-demo-one-dev@gmail.com"
         ]
     },
     {
         "name": "demo-one-prod-users",
         "members": [
-            "jared.holgate+user-demo-one-prod@hashicorp.com"
+            "jared.holgate.ms+user-demo-one-prod@gmail.com"
         ]
     }
 ]
