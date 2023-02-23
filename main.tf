@@ -11,14 +11,6 @@ terraform {
     azuread = {
     }
   }
-
-  backend "remote" {
-    organization = "jaredfholgate-hashicorp"
-
-    workspaces {
-      name = "bootstrap"
-    }
-  }
 }
 
 provider "azurerm" {
