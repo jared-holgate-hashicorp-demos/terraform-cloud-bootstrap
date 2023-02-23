@@ -1,11 +1,8 @@
-resource "tfe_oauth_client" "application" {
+data "tfe_oauth_client" "application" {
   for_each = { for repo in local.github_repositories : "${var.prefix}-${repo.name}" => repo }
   name = each.key
   organization     = var.terraform_organisation
-  api_url          = "https://api.github.com"
-  http_url         = "https://github.com"
-  oauth_token      = var.oauth_tokens[each.value.name]
-  service_provider = "github"
+  name             = var.oauth_tokens[each.value.name]
 }
 
 resource "tfe_workspace" "application" {
