@@ -50,3 +50,11 @@ resource "github_actions_environment_secret" "terraform_api_token" {
   secret_name     = "TF_API_TOKEN"
   plaintext_value = tfe_team_token.application[each.key].token
 }
+
+resource "github_actions_environment_secret" "terraform_name" {
+  for_each        = { for env in local.github_environments : env.name => env }
+  repository      = github_repository.application[each.value.application_name].name
+  environment     = github_repository_environment.application[each.key].environment
+  secret_name     = "TF_NAME"
+  plaintext_value = "${github_repository.application[each.value.application_name].name}-each.key}"
+}
