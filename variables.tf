@@ -1,11 +1,11 @@
 variable "prefix" {
   type    = string
-  default = "jared-holgate"
+  default = "tf-lz"
 }
 
 variable "terraform_organisation" {
   type    = string
-  default = "jaredfholgate-hashicorp"
+  default = "jaredf-holgate-microsoft"
 }
 
 variable "github_organisation" {
