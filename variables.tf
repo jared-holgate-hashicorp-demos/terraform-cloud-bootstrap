@@ -5,7 +5,7 @@ variable "prefix" {
 
 variable "terraform_organisation" {
   type    = string
-  default = "jaredf-holgate-microsoft"
+  default = "jared-holgate-microsoft"
 }
 
 variable "github_organisation" {
