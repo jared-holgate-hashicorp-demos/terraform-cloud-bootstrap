@@ -50,6 +50,7 @@ resource "tfe_team_access" "users" {
     state_versions    = each.value.permissions.permissions.state_versions
     sentinel_mocks    = each.value.permissions.permissions.sentinel_mocks
     workspace_locking = each.value.permissions.permissions.workspace_locking
+    run_tasks         = each.value.permissions.permissions.run_tasks
   }
   team_id      = tfe_team.users[each.value.team_name].id
   workspace_id = tfe_workspace.application[each.value.workspace_name].id
