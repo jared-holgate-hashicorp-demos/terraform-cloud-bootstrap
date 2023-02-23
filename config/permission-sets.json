@@ -6,7 +6,8 @@
             "variables": "read",
             "state_versions": "read-outputs",
             "sentinel_mocks": "none",
-            "workspace_locking": false
+            "workspace_locking": false,
+            "run_tasks": false
         }
     },
     {
@@ -16,7 +17,8 @@
             "variables": "write",
             "state_versions": "write",
             "sentinel_mocks": "read",
-            "workspace_locking": true
+            "workspace_locking": true,
+            "run_tasks": true
         }
     }
 ]
