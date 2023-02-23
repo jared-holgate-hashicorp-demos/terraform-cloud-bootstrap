@@ -56,5 +56,5 @@ resource "github_actions_environment_secret" "terraform_name" {
   repository      = github_repository.application[each.value.application_name].name
   environment     = github_repository_environment.application[each.key].environment
   secret_name     = "TF_NAME"
-  plaintext_value = "${github_repository.application[each.value.application_name].name}-each.key}"
+  plaintext_value = "${github_repository.application[each.value.application_name].name}-${each.key}"
 }
