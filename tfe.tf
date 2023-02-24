@@ -10,7 +10,8 @@ resource "tfe_workspace" "application" {
   organization   = var.terraform_organisation
   description    = "Demonstration ${each.key}"
   queue_all_runs = false
-
+  force_delete   = true  
+    
   dynamic "vcs_repo" {
     for_each = each.value.vcs_integrated ? [each.value.application_name] : []
     content {
